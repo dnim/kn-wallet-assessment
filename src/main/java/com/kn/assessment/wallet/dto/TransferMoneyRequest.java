@@ -6,9 +6,9 @@ import javax.validation.constraints.NotNull;
 
 public class TransferMoneyRequest {
   @NotNull
-  Long fromId;
+  public Long fromId;
   @NotNull
-  Long toId;
+  public Long toId;
   @NotNull
-  BigDecimal amount;
+  public BigDecimal amount;
 }

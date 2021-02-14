@@ -1,7 +1,8 @@
 package com.kn.assessment.wallet.api;
 
-import com.kn.assessment.wallet.dto.BalanceChangeResponse;
+import com.kn.assessment.wallet.dto.TransferResponse;
 import com.kn.assessment.wallet.dto.TransactionRequest;
+import com.kn.assessment.wallet.dto.TransactionResponse;
 import com.kn.assessment.wallet.dto.TransferMoneyRequest;
 import com.kn.assessment.wallet.dto.WalletCreateResponse;
 import com.kn.assessment.wallet.model.Wallet;
@@ -72,14 +73,14 @@ public class WalletController {
   }
 
   @PostMapping("/transaction")
-  ResponseEntity<BalanceChangeResponse> transaction(@Valid @RequestBody TransactionRequest request) {
-    BalanceChangeResponse response = service.performTransaction(request);
+  ResponseEntity<TransactionResponse> transaction(@Valid @RequestBody TransactionRequest request) {
+    TransactionResponse response = service.performTransaction(request);
     return ResponseEntity.ok(response);
   }
 
-  @PostMapping("/transferBetweenWallets")
-  ResponseEntity<BalanceChangeResponse> transferMoney(@Valid @RequestBody TransferMoneyRequest request) {
-    BalanceChangeResponse response = new BalanceChangeResponse("message");
+  @PostMapping("/transfer")
+  ResponseEntity<TransferResponse> transferMoney(@Valid @RequestBody TransferMoneyRequest request) {
+    TransferResponse response = service.transferMoney(request);
     return ResponseEntity.ok(response);
   }
 

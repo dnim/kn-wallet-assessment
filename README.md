@@ -18,6 +18,8 @@
 * check mobile friendly
 * provide best notification approach then alerts
 * cover with tests
+* add docker
+* add security
 
 ### Road map
 

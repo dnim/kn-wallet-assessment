@@ -41,8 +41,8 @@ class WalletList extends Component<WalletListProps, WalletListState> {
   transaction = async (request: TransactionRequest) => {
     const response = await this.props.walletService.transaction(request);
     console.log("Transfer resp: ", response);
-    if (response.isError) {
-      alert(response.message)
+    if (response.status.isError) {
+      alert(response.status.message)
     } else {
       this.setState({
         wallets: this.state.wallets.map((wallet: Wallet) => {

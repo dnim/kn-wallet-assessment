@@ -1,5 +1,7 @@
 import { BalanceChangeResponse } from "../dto/BalanceChangeResponse";
 import { TransactionRequest } from "../dto/TransactionRequest";
+import { TransactionResponse } from "../dto/TransactionResponse";
+import { TransferMoneyResponse } from "../dto/TransferMoneyRepsonse";
 import { TransferMoneyRequest } from "../dto/TransferMoneyRequest";
 import { WalletCreateResponse } from "../dto/WalletCreateResponse";
 import { Wallet } from "./types/Wallet";
@@ -23,9 +25,8 @@ interface WalletCrud {
   delete(id: number): Promise<any>;
   create(wallet: Wallet): Promise<WalletCreateResponse>;
   update(wallet: Wallet): Promise<Wallet>;
-  transaction(request: TransactionRequest): Promise<BalanceChangeResponse>;
-  transfer(request: TransferMoneyRequest): Promise<BalanceChangeResponse>;
-
+  transaction(request: TransactionRequest): Promise<TransactionResponse>;
+  transfer(request: TransferMoneyRequest): Promise<TransferMoneyResponse>;
 }
 
 export class WalletService implements WalletCrud {
@@ -59,18 +60,22 @@ export class WalletService implements WalletCrud {
     throw new Error("Method not implemented.");
   }
 
-  async transaction(request: TransactionRequest): Promise<BalanceChangeResponse> {
+  async transaction(request: TransactionRequest): Promise<TransactionResponse> {
     const response = await fetch(`${WalletService.walletContext}/transaction`, {
       method: RequestType.POST,
       headers: JsonHeaders,
       body: JSON.stringify(request),
-
     })
     return await response.json();
   }
 
-  transfer(request: TransferMoneyRequest): Promise<BalanceChangeResponse> {
-    throw new Error("Method not implemented.");
+  async transfer(request: TransferMoneyRequest): Promise<TransferMoneyResponse> {
+    const response = await fetch(`${WalletService.walletContext}/transfer`, {
+      method: RequestType.POST,
+      headers: JsonHeaders,
+      body: JSON.stringify(request),
+    })
+    return await response.json();
   }
 
 }

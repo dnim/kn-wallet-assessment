@@ -76,7 +76,7 @@ export class WalletRow extends Component<WalletRowProps, WalletRowState> {
                 </InputGroup>
               </Col>
               <Col>
-                {' '}<Button size="sm" color="warning">edit</Button>{' '}
+                {' '}<Button size="sm" color="warning" disabled={true} title="TODO">edit</Button>{' '}
                 <Button size="sm" color="danger" onClick={() => this.handleDelete(wallet.id)}>delete</Button>{' '}
               </Col>
             </Row>

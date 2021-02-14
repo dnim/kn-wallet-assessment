@@ -5,8 +5,10 @@ import java.util.Optional;
 
 import javax.persistence.OptimisticLockException;
 
-import com.kn.assessment.wallet.dto.BalanceChangeResponse;
+import com.kn.assessment.wallet.dto.TransferResponse;
+import com.kn.assessment.wallet.dto.ResponseStatus;
 import com.kn.assessment.wallet.dto.TransactionRequest;
+import com.kn.assessment.wallet.dto.TransactionResponse;
 import com.kn.assessment.wallet.dto.TransferMoneyRequest;
 import com.kn.assessment.wallet.model.Wallet;
 import com.kn.assessment.wallet.model.WalletRepository;
@@ -28,19 +30,13 @@ public class WalletService {
   private WalletRepository repository;
 
   @Transactional
-  public BalanceChangeResponse transferMoney(TransferMoneyRequest request) {
-
-    BalanceChangeResponse response = new BalanceChangeResponse("message");
-    return response;
-  }
-
-  @Transactional
-  public BalanceChangeResponse performTransaction(TransactionRequest request) {
+  public TransactionResponse performTransaction(TransactionRequest request) {
     Wallet wallet = repository.findById(request.walletId).orElse(null);
-    BalanceChangeResponse response = new BalanceChangeResponse("The wallet balance was updated successfully.");
+    TransactionResponse response = new TransactionResponse();
+    ResponseStatus status = response.status;
     if (wallet == null) {
-      response.isError = true;
-      response.message = "Wallet not found";
+      status.isError = true;
+      status.message = "Wallet not found";
     } else {
       BigDecimal newBalance;
       switch (request.type) {
@@ -53,32 +49,48 @@ public class WalletService {
             newBalance = wallet.getBalance().subtract(request.amount);
             wallet.setBalance(newBalance);
           } else {
-            response.isError = true;
-            response.message = "Not enough money on the account";
+            status.isError = true;
+            status.message = "Not enough money on the account";
           }
           break;
         default:
-          response.isError = true;
-          response.message = "Transaction type '" + request.type + "' is not supported";
+          status.isError = true;
+          status.message = "Transaction type '" + request.type + "' is not supported";
       }
     }
-    if (!response.isError) {
+    if (!status.isError) {
       try {
         Wallet result = repository.save(wallet);
         response.newBalance = result.getBalance();
-      } catch(OptimisticLockException exception) {
+      } catch (OptimisticLockException exception) {
         log.error("Optimistic lock error on wallet " + wallet, exception);
-        response.isError = true;
-        response.message = "Can't do the transaction. Probably, the wallet was updated in enother transaction. Please, refresh the page.";
+        status.isError = true;
+        status.message = "Can't do the transaction. Probably, the wallet was updated in enother transaction. Please, refresh the page.";
       }
     }
     return response;
   }
 
   @Transactional
-  public BalanceChangeResponse transfer(TransferMoneyRequest request) {
-    // TODO: implement me! 
-    return null;
+  public TransferResponse transferMoney(TransferMoneyRequest request) {
+    TransferResponse response = new TransferResponse();
+    Wallet from = repository.findByIdWithReadLock(request.fromId).orElse(null);
+    Wallet to = repository.findByIdWithReadLock(request.toId).orElse(null);
+    if (from == null || to == null) {
+      response.status.isError = true;
+      response.status.message = "Can't find wallet(s)";
+    } else if (from.getBalance().compareTo(request.amount) == -1) {
+      response.status.isError = true;
+      response.status.message = "Not enough money on the balance";
+    } else {
+      BigDecimal fromNewBalance = from.getBalance().subtract(request.amount);
+      from.setBalance(fromNewBalance);
+      BigDecimal toNewBalance = to.getBalance().add(request.amount);
+      to.setBalance(toNewBalance);
+      response.from = repository.save(from);
+      response.to = repository.save(to);
+    }
+    return response;
   }
 
 }

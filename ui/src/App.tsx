@@ -3,7 +3,7 @@ import WalletList from './wallet/WalletList';
 import { WalletService } from './wallet/WalletService';
 import { Container, Row, Col, Button } from 'reactstrap';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import { TransferMoneyPage } from './transfer-money/TransferMoneyPage';
+import TransferMoneyPage from './transfer-money/TransferMoneyPage';
 import CreateWalletPage from './create-wallet/CreateWalletPage';
 
 const App = () => {
@@ -31,7 +31,7 @@ const App = () => {
         </Row>
         <Switch>
           <Route path="/transfer">
-            <TransferMoneyPage />
+            <TransferMoneyPage walletService={walletService} />
           </Route>
           <Route path="/create">
             <CreateWalletPage walletService={walletService} />
