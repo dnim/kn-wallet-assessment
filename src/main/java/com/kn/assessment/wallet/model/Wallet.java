@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
 
@@ -31,4 +32,7 @@ public class Wallet {
   @Min(0)
   @NotNull
   private BigDecimal balance = BigDecimal.ZERO;
+
+  @Version
+  private Integer version;
 }

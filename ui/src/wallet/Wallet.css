@@ -1,3 +1,6 @@
 .container, .wallet-buttons {
   margin: 10px;
 }
+.input-group-sm {
+  width: 250px !important;
+}

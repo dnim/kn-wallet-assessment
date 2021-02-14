@@ -1,13 +1,30 @@
+import { BalanceChangeResponse } from "../dto/BalanceChangeResponse";
+import { TransactionRequest } from "../dto/TransactionRequest";
+import { TransferMoneyRequest } from "../dto/TransferMoneyRequest";
+import { WalletCreateResponse } from "../dto/WalletCreateResponse";
 import { Wallet } from "./types/Wallet";
 
+
+enum RequestType {
+  GET = "GET",
+  POST = "POST",
+  PUT = "PUT",
+  DELETE = "DELETE"
+}
+
+const JsonHeaders = new Headers({
+  'Content-Type': 'application/json'
+})
 
 
 interface WalletCrud {
 
-    listWallets(): Promise<Wallet[]>;
-    delete(id: number): Promise<any>;
-    create(wallet: Wallet): Promise<Wallet>;
-    update(wallet: Wallet): Promise<Wallet>;
+  listWallets(): Promise<Wallet[]>;
+  delete(id: number): Promise<any>;
+  create(wallet: Wallet): Promise<WalletCreateResponse>;
+  update(wallet: Wallet): Promise<Wallet>;
+  transaction(request: TransactionRequest): Promise<BalanceChangeResponse>;
+  transfer(request: TransferMoneyRequest): Promise<BalanceChangeResponse>;
 
 }
 
@@ -17,21 +34,22 @@ export class WalletService implements WalletCrud {
 
   async listWallets(): Promise<Wallet[]> {
     return fetch(`${WalletService.walletContext}/list`, {
-      method: "GET"
+      method: RequestType.GET
     })
-    .then(response => response.json())
+      .then(response => response.json())
   }
 
   async delete(id: number): Promise<any> {
     const response = await fetch(`${WalletService.walletContext}/${id}`, {
-      method: "DELETE"
+      method: RequestType.DELETE
     });
-    return await response.json();
+    return response.status;
   }
 
-  async create(wallet: Wallet): Promise<Wallet> {
+  async create(wallet: Wallet): Promise<WalletCreateResponse> {
     const response = await fetch(`${WalletService.walletContext}/create`, {
-      method: "POST",
+      method: RequestType.POST,
+      headers: JsonHeaders,
       body: JSON.stringify(wallet)
     });
     return await response.json();
@@ -40,5 +58,19 @@ export class WalletService implements WalletCrud {
   update(wallet: Wallet): Promise<Wallet> {
     throw new Error("Method not implemented.");
   }
-  
+
+  async transaction(request: TransactionRequest): Promise<BalanceChangeResponse> {
+    const response = await fetch(`${WalletService.walletContext}/transaction`, {
+      method: RequestType.POST,
+      headers: JsonHeaders,
+      body: JSON.stringify(request),
+
+    })
+    return await response.json();
+  }
+
+  transfer(request: TransferMoneyRequest): Promise<BalanceChangeResponse> {
+    throw new Error("Method not implemented.");
+  }
+
 }

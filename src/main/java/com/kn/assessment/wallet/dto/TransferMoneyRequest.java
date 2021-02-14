@@ -2,10 +2,13 @@ package com.kn.assessment.wallet.dto;
 
 import java.math.BigDecimal;
 
-import com.kn.assessment.wallet.model.Wallet;
+import javax.validation.constraints.NotNull;
 
 public class TransferMoneyRequest {
-  Wallet from;
-  Wallet to;
+  @NotNull
+  Long fromId;
+  @NotNull
+  Long toId;
+  @NotNull
   BigDecimal amount;
 }

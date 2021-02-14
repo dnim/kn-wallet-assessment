@@ -1,9 +1,15 @@
 package com.kn.assessment.wallet.dto;
 
-import lombok.Data;
+import java.math.BigDecimal;
 
-@Data
 public class BalanceChangeResponse {
-  String message;
-  boolean isError;
+  public String message;
+  public boolean isError = false;
+  public BigDecimal newBalance;
+
+  public BalanceChangeResponse() {}
+
+  public BalanceChangeResponse(String message) {
+    this.message = message;
+  }
 }

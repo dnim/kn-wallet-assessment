@@ -18,7 +18,8 @@ public class Bootstrap implements CommandLineRunner {
 
   @Override
   public void run(String... args) {
-    Stream.of("Vacation", "Charity", "Pension").forEach(name -> walletRepository.save(new Wallet(name)));
+    Stream.of("Vacation", "Charity", "Pension", "Additional", "One more", "And more")
+        .forEach(name -> walletRepository.save(new Wallet(name)));
     walletRepository.findAll().forEach(System.out::println);
   }
 }

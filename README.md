@@ -7,13 +7,17 @@
 #### Run in dev mode
 
 `./gradlew bootRun`
+
 * for hot reload:
   * change file & save
   * update project classpath (in Intellij Idea - Build -> Build Project `CMD+F9`)
 
 ### TODO
+
 * fix depenencies
-* mobile friendly
+* check mobile friendly
+* provide best notification approach then alerts
+* cover with tests
 
 ### Road map
 
