@@ -5,8 +5,6 @@ import { Table } from 'reactstrap';
 import { WalletRow } from "./WalletRow";
 import "./Wallet.css";
 import { TransactionRequest } from "../dto/TransactionRequest";
-import resolve from "resolve";
-import { BalanceChangeResponse } from "../dto/BalanceChangeResponse";
 
 interface WalletListProps {
   walletService: WalletService;
