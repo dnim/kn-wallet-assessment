@@ -7,6 +7,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Random;
 import java.util.stream.Stream;
 
 @Component
@@ -18,8 +21,14 @@ public class Bootstrap implements CommandLineRunner {
 
   @Override
   public void run(String... args) {
-    Stream.of("Vacation", "Charity", "Pension", "Additional", "One more", "And more")
-        .forEach(name -> walletRepository.save(new Wallet(name)));
+    Random r = new Random();
+    
+    Stream.of("Vacation", "Charity", "Pension", "For a rainy day").forEach(name -> {
+      Wallet wallet = new Wallet(name);
+      BigDecimal balance = BigDecimal.valueOf(0 + r.nextDouble() * (1e6 - 0)).setScale(4, RoundingMode.HALF_DOWN);
+      wallet.setBalance(balance);
+      walletRepository.save(wallet);
+    });
     walletRepository.findAll().forEach(System.out::println);
   }
 }

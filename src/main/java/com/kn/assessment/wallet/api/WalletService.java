@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 import javax.persistence.OptimisticLockException;
+import javax.validation.ConstraintViolationException;
 
 import com.kn.assessment.wallet.dto.TransferResponse;
 import com.kn.assessment.wallet.dto.ResponseStatus;
@@ -87,8 +88,14 @@ public class WalletService {
       from.setBalance(fromNewBalance);
       BigDecimal toNewBalance = to.getBalance().add(request.amount);
       to.setBalance(toNewBalance);
-      response.from = repository.save(from);
-      response.to = repository.save(to);
+      try {
+        response.from = repository.save(from);
+        response.to = repository.save(to);
+      } catch(ConstraintViolationException e) {
+        response.status.isError = true;
+        response.status.message = "The value after point should be not more than 4 digits. For example '43.3233'";
+      }
+      // TODO: handle other exceptions (locks, saving, etc.)
     }
     return response;
   }
